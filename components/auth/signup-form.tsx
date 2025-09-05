@@ -44,8 +44,15 @@ export function SignupForm() {
         setIsLoading(true);
         const formData = new FormData(e.currentTarget);
         const result = await signupAction(state, formData);
-        setState(result);
+
+        // ✅ Ensure state is always updated with a valid object
+        setState(result ?? initialState);
         setIsLoading(false);
+
+        if (!result) {
+          toast.error("Something went wrong. Please try again.");
+          return;
+        }
 
         if (result.message) {
           if (result.success) {
