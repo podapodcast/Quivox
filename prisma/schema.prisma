@@ -1,0 +1,214 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Investment related fields
+  balance       Decimal @default(0) @db.Decimal(10, 2)
+  totalInvested Decimal @default(0) @db.Decimal(10, 2)
+  totalEarnings Decimal @default(0) @db.Decimal(10, 2)
+
+  // Relations
+  sessions     Session[]
+  investments  Investment[]
+  transactions Transaction[]
+  deposits     Deposit[]
+  withdrawals  Withdrawal[]
+  wallets      Wallet[]
+  referrals    Referral[]    @relation("ReferrerUser")
+  referredBy   Referral[]    @relation("ReferredUser")
+
+  @@map("users")
+}
+
+model InvestmentPlan {
+  id           String   @id @default(cuid())
+  name         String
+  description  String
+  minAmount    Decimal  @db.Decimal(10, 2)
+  maxAmount    Decimal  @db.Decimal(10, 2)
+  interestRate Decimal  @db.Decimal(5, 2) // Percentage
+  duration     Int // Duration in days
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  investments Investment[]
+
+  @@map("investment_plans")
+}
+
+model Investment {
+  id        String           @id @default(cuid())
+  userId    String
+  planId    String
+  amount    Decimal          @db.Decimal(10, 2)
+  status    InvestmentStatus @default(ACTIVE)
+  startDate DateTime         @default(now())
+  endDate   DateTime
+  earnings  Decimal          @default(0) @db.Decimal(10, 2)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Relations
+  user User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan InvestmentPlan @relation(fields: [planId], references: [id])
+
+  @@map("investments")
+}
+
+model Transaction {
+  id          String            @id @default(cuid())
+  userId      String
+  type        TransactionType
+  amount      Decimal           @db.Decimal(10, 2)
+  status      TransactionStatus @default(PENDING)
+  description String?
+  reference   String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model Deposit {
+  id        String        @id @default(cuid())
+  userId    String
+  amount    Decimal       @db.Decimal(10, 2)
+  status    DepositStatus @default(PENDING)
+  method    String // Payment method
+  reference String? // Payment reference
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("deposits")
+}
+
+model Wallet {
+  id         String   @id @default(cuid())
+  userId     String
+  coinName   String
+  coinSymbol String
+  address    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("wallets")
+}
+
+model Withdrawal {
+  id        String           @id @default(cuid())
+  userId    String
+  amount    Decimal          @db.Decimal(10, 2)
+  status    WithdrawalStatus @default(PENDING)
+  method    String // Withdrawal method
+  details   Json? // Bank details, wallet address, etc.
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("withdrawals")
+}
+
+model Referral {
+  id         String         @id @default(cuid())
+  referrerId String
+  referredId String
+  commission Decimal        @default(0) @db.Decimal(10, 2)
+  status     ReferralStatus @default(PENDING)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  // Relations
+  referrer User @relation("ReferrerUser", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred User @relation("ReferredUser", fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@unique([referrerId, referredId])
+  @@map("referrals")
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// Enums
+enum InvestmentStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  INVESTMENT
+  EARNINGS
+  REFERRAL_COMMISSION
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum DepositStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum WithdrawalStatus {
+  PENDING
+  APPROVED
+  COMPLETED
+  REJECTED
+}
+
+enum ReferralStatus {
+  PENDING
+  COMPLETED
+}
