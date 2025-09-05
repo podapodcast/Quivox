@@ -169,5 +169,5 @@ html {
 }
 
 .animate-fadeInUp {
-  animation: fadeInUp 0.9s ease-out;
+  animation: fadeInUp 0.3s ease-out;
 }
