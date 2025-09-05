@@ -140,11 +140,13 @@ export default function LandingPage({ user }: { user: any }) {
 
             <div className="flex items-center space-x-4">
               {user ? (
-                <Link href="/dashboard">
-                  <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-bold hover:opacity-90">
-                    Dashboard
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => {
+                    window.location.href = "/dashboard";
+                  }}
+                >
+                  Dashboard
+                </Button>
               ) : (
                 <>
                   <Link href="/login">
@@ -155,11 +157,13 @@ export default function LandingPage({ user }: { user: any }) {
                       Sign In
                     </Button>
                   </Link>
-                  <Link href="/signup">
-                    <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-bold hover:opacity-90">
-                      Get Started
-                    </Button>
-                  </Link>
+                  <Button
+                    onClick={() => {
+                      window.location.href = "/signup";
+                    }}
+                  >
+                    Get Started
+                  </Button>
                 </>
               )}
             </div>
@@ -185,23 +189,25 @@ export default function LandingPage({ user }: { user: any }) {
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             {user ? (
-              <Link href="/dashboard">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-bold text-lg px-8 py-6"
-                >
-                  Go to Dashboard
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-bold text-lg px-8 py-6"
+                onClick={() => {
+                  window.location.href = "/dashboard/invest";
+                }}
+              >
+                Start Investing Today
+              </Button>
             ) : (
-              <Link href="/signup">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-bold text-lg px-8 py-6"
-                >
-                  Start Investing Today
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-bold text-lg px-8 py-6"
+                onClick={() => {
+                  window.location.href = "/signup";
+                }}
+              >
+                Start Investing Today
+              </Button>
             )}
           </div>
         </div>

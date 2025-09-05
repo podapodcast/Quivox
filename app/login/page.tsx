@@ -12,7 +12,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+        <div className="flex items-center justify-center mb-4">
           <Link href="/">
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-r from-orange-500 to-yellow-500 flex items-center justify-center">

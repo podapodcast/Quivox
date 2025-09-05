@@ -6,13 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { signupAction } from "@/lib/actions/auth";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-const initialState = {
-  message: "",
-  success: false,
-};
 
 function getPasswordStrength(password: string) {
   let score = 0;
@@ -28,13 +22,10 @@ function getPasswordStrength(password: string) {
 }
 
 export function SignupForm() {
-  const [state, setState] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
-
-  const router = useRouter();
   const strength = getPasswordStrength(password);
 
   return (
@@ -42,25 +33,37 @@ export function SignupForm() {
       onSubmit={async (e) => {
         e.preventDefault();
         setIsLoading(true);
+
         const formData = new FormData(e.currentTarget);
-        const result = await signupAction(state, formData);
+        const confirmPassword = formData.get("confirmPassword") as string;
 
-        // ✅ Ensure state is always updated with a valid object
-        setState(result ?? initialState);
-        setIsLoading(false);
-
-        if (!result) {
-          toast.error("Something went wrong. Please try again.");
+        if (password !== confirmPassword) {
+          toast.error("Passwords do not match");
+          setIsLoading(false);
           return;
         }
 
-        if (result.message) {
-          if (result.success) {
-            toast.success(result.message);
-            router.push("/dashboard");
-          } else {
-            toast.error(result.message);
+        try {
+          const result = await signupAction(formData);
+
+          if (!result) {
+            toast.error("Something went wrong. Please try again.");
+            return;
           }
+
+          if (result.message) {
+            if (result.success) {
+              toast.success(result.message);
+              window.location.href = "/dashboard";
+            } else {
+              toast.error(result.message);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+          toast.error("Unexpected error. Please try again.");
+        } finally {
+          setIsLoading(false);
         }
       }}
       className="space-y-4"

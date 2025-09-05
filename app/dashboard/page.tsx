@@ -50,7 +50,7 @@ export default async function DashboardPage() {
     <div className="space-y-8">
       {/* Welcome */}
       <div>
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-2xl font-bold">
           Welcome back, {currentUser?.name}!
         </h1>
         <p className="text-muted-foreground">
@@ -104,13 +104,13 @@ export default async function DashboardPage() {
       <div>
         <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Link href="/deposit">
+          <Link href="/dashboard/deposit">
             <Button className="w-full h-20 flex flex-col items-center justify-center gap-2">
               <ArrowDownRight className="h-6 w-6" />
               <span>Deposit</span>
             </Button>
           </Link>
-          <Link href="/invest">
+          <Link href="/dashboard/invest">
             <Button
               variant="outline"
               className="w-full h-20 flex flex-col items-center justify-center gap-2"
@@ -119,7 +119,7 @@ export default async function DashboardPage() {
               <span>Invest</span>
             </Button>
           </Link>
-          <Link href="/withdraw">
+          <Link href="/dashboard/withdraw">
             <Button
               variant="outline"
               className="w-full h-20 flex flex-col items-center justify-center gap-2"
@@ -128,13 +128,13 @@ export default async function DashboardPage() {
               <span>Withdraw</span>
             </Button>
           </Link>
-          <Link href="/referrals">
+          <Link href="/dashboard/wallet">
             <Button
               variant="outline"
               className="w-full h-20 flex flex-col items-center justify-center gap-2"
             >
-              <Users className="h-6 w-6" />
-              <span>Refer</span>
+              <Wallet className="h-6 w-6" />
+              <span>Wallet</span>
             </Button>
           </Link>
         </div>
