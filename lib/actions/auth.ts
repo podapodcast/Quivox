@@ -10,6 +10,8 @@ export async function signupAction(formData: FormData) {
   const email = formData.get("email") as string
   const password = formData.get("password") as string
   const confirmPassword = formData.get("confirmPassword") as string
+  const phoneNumber = formData.get("phoneNumber") as string
+  const country = formData.get("country") as string
 
   // Validation
   if (!name || !email || !password || !confirmPassword) {
@@ -44,7 +46,7 @@ export async function signupAction(formData: FormData) {
     }
 
     // Create user
-    const user = await createUser(email, password, name)
+    const user = await createUser(email, password, name, phoneNumber, country)
 
     // Create session
     const sessionToken = generateSessionToken()

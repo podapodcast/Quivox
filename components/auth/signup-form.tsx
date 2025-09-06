@@ -26,6 +26,7 @@ export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [agree, setAgree] = useState(false); // ✅ track agreement
   const strength = getPasswordStrength(password);
 
   return (
@@ -39,6 +40,12 @@ export function SignupForm() {
 
         if (password !== confirmPassword) {
           toast.error("Passwords do not match");
+          setIsLoading(false);
+          return;
+        }
+
+        if (!agree) {
+          toast.error("You must agree to the Terms and Conditions");
           setIsLoading(false);
           return;
         }
@@ -87,6 +94,19 @@ export function SignupForm() {
           name="email"
           type="email"
           placeholder="Enter your email"
+          required
+          disabled={isLoading}
+        />
+      </div>
+
+      {/* Phone Number */}
+      <div className="space-y-2">
+        <Label htmlFor="phoneNumber">Phone Number</Label>
+        <Input
+          id="phoneNumber"
+          name="phoneNumber"
+          type="tel"
+          placeholder="Enter your phone number"
           required
           disabled={isLoading}
         />
@@ -157,7 +177,29 @@ export function SignupForm() {
         </div>
       </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      {/* Terms and Conditions */}
+      <div className="flex items-center space-x-2">
+        <input
+          id="terms"
+          type="checkbox"
+          checked={agree}
+          onChange={(e) => setAgree(e.target.checked)}
+          disabled={isLoading}
+          className="h-4 w-4"
+        />
+        <Label htmlFor="terms" className="text-sm">
+          I agree to the{" "}
+          <a href="#" className="underline text-orange-600 hover:text-orange-800">
+            Terms and Conditions
+          </a>
+        </Label>
+      </div>
+
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={isLoading || !agree}
+      >
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Create Account
       </Button>

@@ -8,7 +8,8 @@ export default function TradingViewMarketList() {
   useEffect(() => {
     if (container.current && !container.current.querySelector("script")) {
       const script = document.createElement("script");
-      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
+      script.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
       script.async = true;
       script.innerHTML = JSON.stringify({
         width: "100%",
@@ -53,6 +54,7 @@ export default function TradingViewMarketList() {
         <div
           className="tradingview-widget-container"
           ref={container}
+          data-theme="dark"
         >
           <div className="tradingview-widget-container__widget" />
         </div>
