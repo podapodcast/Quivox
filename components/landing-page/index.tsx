@@ -29,9 +29,11 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import TradingViewMarketList from "./trading-view";
 
 export default function LandingPage({ user }: { user: any }) {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [activeTab, setActiveTab] = useState<"video" | "text">("video");
 
   const cryptoLogos = [
     { name: "Bitcoin", image: "/btc.png" },
@@ -71,6 +73,17 @@ export default function LandingPage({ user }: { user: any }) {
         "The security features and user experience are top-notch. I trust Quivox with my crypto investments completely.",
       rating: 5,
       avatar: "/woman-developer.png",
+    },
+  ];
+
+  const videoTestimonials = [
+    {
+      src: "/videos/testimonial1.mp4",
+      caption: "David Joshua, Small Business Owner",
+    },
+    {
+      src: "/videos/testimonial2.mp4",
+      caption: "Mark Perry, Contractor",
     },
   ];
 
@@ -364,6 +377,9 @@ export default function LandingPage({ user }: { user: any }) {
         </div>
       </section>
 
+      {/* TradingView Market Overview */}
+      <TradingViewMarketList />
+
       {/* Benefits Section */}
       <section id="benefits" className="py-20 bg-slate-900/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -513,82 +529,130 @@ export default function LandingPage({ user }: { user: any }) {
               What Our Users Say
             </h2>
           </div>
+          <div className="flex justify-center mb-10">
+            <div className="bg-slate-800/50 rounded-full p-1 flex">
+              <button
+                onClick={() => setActiveTab("video")}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  activeTab === "video"
+                    ? "bg-orange-500 text-white"
+                    : "text-slate-300 hover:text-white"
+                }`}
+              >
+                Video
+              </button>
+              <button
+                onClick={() => setActiveTab("text")}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  activeTab === "text"
+                    ? "bg-orange-500 text-white"
+                    : "text-slate-300 hover:text-white"
+                }`}
+              >
+                Text
+              </button>
+            </div>
+          </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="relative">
-              <Card className="bg-slate-800/50 border-slate-700 p-8">
-                <CardContent className="text-center">
-                  <div className="flex justify-center mb-4">
-                    {[...Array(testimonials[currentTestimonial].rating)].map(
-                      (_, i) => (
-                        <Star
-                          key={i}
-                          className="w-5 h-5 text-yellow-500 fill-current"
-                        />
-                      )
-                    )}
-                  </div>
-                  <p className="text-xl text-slate-300 mb-6 italic">
-                    &quot;{testimonials[currentTestimonial].content}&quot;
-                  </p>
-                  <div className="flex items-center justify-center gap-4">
-                    <img
-                      src={
-                        testimonials[currentTestimonial].avatar ||
-                        "/placeholder.svg"
-                      }
-                      alt={testimonials[currentTestimonial].name}
-                      className="w-12 h-12 rounded-full"
-                    />
-                    <div>
-                      <div className="font-semibold text-white">
-                        {testimonials[currentTestimonial].name}
-                      </div>
-                      <div className="text-slate-400 text-sm">
-                        {testimonials[currentTestimonial].role}
-                      </div>
+            {activeTab === "video" ? (
+              // VIDEO TESTIMONIALS
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {videoTestimonials.map((video, i) => (
+                  <div
+                    key={i}
+                    className="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden shadow-lg"
+                  >
+                    <video controls className="w-full h-100 object-cover">
+                      <source src={video.src} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    <div className="p-4">
+                      <p className="text-slate-300 text-sm italic">
+                        {video.caption}
+                      </p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                ))}
+              </div>
+            ) : (
+              // TEXT TESTIMONIALS (your existing carousel)
+              <div className="relative">
+                <Card className="bg-slate-800/50 border-slate-700 p-8">
+                  <CardContent className="text-center">
+                    <div className="flex justify-center mb-4">
+                      {[...Array(testimonials[currentTestimonial].rating)].map(
+                        (_, i) => (
+                          <Star
+                            key={i}
+                            className="w-5 h-5 text-yellow-500 fill-current"
+                          />
+                        )
+                      )}
+                    </div>
+                    <p className="text-xl text-slate-300 mb-6 italic">
+                      &quot;{testimonials[currentTestimonial].content}&quot;
+                    </p>
+                    <div className="flex items-center justify-center gap-4">
+                      <img
+                        src={
+                          testimonials[currentTestimonial].avatar ||
+                          "/placeholder.svg"
+                        }
+                        alt={testimonials[currentTestimonial].name}
+                        className="w-12 h-12 rounded-full"
+                      />
+                      <div>
+                        <div className="font-semibold text-white">
+                          {testimonials[currentTestimonial].name}
+                        </div>
+                        <div className="text-slate-400 text-sm">
+                          {testimonials[currentTestimonial].role}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-              <button
-                onClick={() =>
-                  setCurrentTestimonial(
-                    (prev) =>
-                      (prev - 1 + testimonials.length) % testimonials.length
-                  )
-                }
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5 text-white" />
-              </button>
-
-              <button
-                onClick={() =>
-                  setCurrentTestimonial(
-                    (prev) => (prev + 1) % testimonials.length
-                  )
-                }
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition-colors"
-              >
-                <ChevronRight className="w-5 h-5 text-white" />
-              </button>
-            </div>
-
-            <div className="flex justify-center mt-6 gap-2">
-              {testimonials.map((_, index) => (
+                {/* Left & Right Buttons */}
                 <button
-                  key={index}
-                  onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentTestimonial
-                      ? "bg-orange-500"
-                      : "bg-slate-600"
-                  }`}
-                />
-              ))}
-            </div>
+                  onClick={() =>
+                    setCurrentTestimonial(
+                      (prev) =>
+                        (prev - 1 + testimonials.length) % testimonials.length
+                    )
+                  }
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5 text-white" />
+                </button>
+                <button
+                  onClick={() =>
+                    setCurrentTestimonial(
+                      (prev) => (prev + 1) % testimonials.length
+                    )
+                  }
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5 text-white" />
+                </button>
+
+                {/* Dots */}
+                <div className="flex justify-center mt-6 gap-2">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentTestimonial(index)}
+                      className={`w-3 h-3 rounded-full transition-colors ${
+                        index === currentTestimonial
+                          ? "bg-orange-500"
+                          : "bg-slate-600"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
