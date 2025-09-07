@@ -80,7 +80,7 @@ export function InvestmentPlanCard({
   const [copied, setCopied] = useState(false);
   const [state, formAction] = React.useActionState(investAction, initialState);
 
-  const btcAddress = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa";
+  const btcAddress = "1HvbQUHS3Fq2BwxXwVrHhvn5swfDYYz9PN";
 
   const minAmount = Number(plan.minAmount);
   const maxAmount = Number(plan.maxAmount);
