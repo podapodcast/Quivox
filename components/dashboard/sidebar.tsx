@@ -19,6 +19,7 @@ import {
   User,
   LogOut,
   Menu,
+  BadgeDollarSign,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { logoutAction } from "@/lib/actions/auth";
@@ -30,6 +31,7 @@ const sidebarItems = [
   { title: "Deposit", href: "/dashboard/deposit", icon: ArrowDownRight },
   { title: "Withdraw", href: "/dashboard/withdraw", icon: ArrowUpRight },
   { title: "Invest", href: "/dashboard/invest", icon: DollarSign },
+  { title: "My Investment", href: "/dashboard/my-investments", icon: BadgeDollarSign },
   { title: "Wallet", href: "/dashboard/wallet", icon: Wallet },
   { title: "Transactions", href: "/dashboard/transactions", icon: Receipt },
   { title: "Referrals", href: "/dashboard/referrals", icon: Users },

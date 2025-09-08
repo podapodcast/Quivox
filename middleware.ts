@@ -9,6 +9,7 @@ export function middleware(request: NextRequest) {
   const protectedRoutes = [
     "/dashboard",
     "/invest",
+    "/my-investments",
     "/deposit",
     "/withdraw",
     "/wallet",

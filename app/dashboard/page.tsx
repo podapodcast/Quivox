@@ -173,7 +173,7 @@ export default async function DashboardPage() {
                   </Badge>
                 </div>
               ))}
-              <Link href="/invest">
+              <Link href="/dashboard/my-investments">
                 <Button variant="outline" className="w-full">
                   View All Investments
                 </Button>
@@ -182,7 +182,7 @@ export default async function DashboardPage() {
           ) : (
             <div className="text-center py-6">
               <p className="text-muted-foreground mb-4">No investments yet</p>
-              <Link href="/invest">
+              <Link href="/dashboard/invest">
                 <Button>Start Investing</Button>
               </Link>
             </div>
